@@ -53,9 +53,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         storiesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String web_page = storyArrayAdapter.getItem(position).getWebUrl();
+                String webPage = storyArrayAdapter.getItem(position).getWebUrl();
                 Intent launchInBrowser = new Intent(Intent.ACTION_VIEW);
-                launchInBrowser.setData(Uri.parse(web_page));
+                launchInBrowser.setData(Uri.parse(webPage));
                 startActivity(launchInBrowser);
             }
         });

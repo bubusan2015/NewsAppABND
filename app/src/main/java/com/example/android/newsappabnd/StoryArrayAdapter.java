@@ -32,7 +32,7 @@ public class StoryArrayAdapter extends ArrayAdapter<Story> {
         TextView storyTitleTextView = convertView.findViewById(R.id.tv_story_title_listview_item);
         TextView storySectionTextView = convertView.findViewById(R.id.tv_story_section_listview_item);
         TextView storyDateTextView = convertView.findViewById(R.id.tv_story_date_listview_item);
-        storyTitleTextView.setText(currentStory.getTitle());
+        storyTitleTextView.setText("desters="+String.valueOf(position)+". "+currentStory.getTitle());
         storySectionTextView.setText(currentStory.getSectionName());
         storyDateTextView.setText(Utility.getFormatedDate(currentStory.getDate()));
         return convertView;

@@ -27,11 +27,7 @@ public class GetStoriesAsyncTaskLoader extends AsyncTaskLoader<List<Story>> {
     @Override
     public List<Story> loadInBackground() {
 
-//        String fromHttpResult=Utility.fetchStringFromHttp(urlString);
-//        //Log.e(Utility.errorTag,fromHttpResult);
-//        ArrayList<Story> storiesList=Utility.extractJsonNews(fromHttpResult);
-    ArrayList<Story> storiesList = Utility.getStoriesList(urlString,5);
-     Log.e(Utility.errorTag,storiesList.toString());
+    ArrayList<Story> storiesList = Utility.getStoriesList(urlString,1,5);
         return storiesList;
     }
 }

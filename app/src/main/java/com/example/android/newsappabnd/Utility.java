@@ -20,14 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by nibos on 3/13/2018.
- */
-//// !!! de sters
-    /// dar cum ar fi daca vreau sa pun in lista informatii dintr un jsonobject care e ca un stream...
-    /// mai dau in jos din lista.. mai caut informatii din alt json object.. le adaug si pe astea la lista...
-
-
 public class Utility {
     public static final String errorTag="newsAppErr";
     public static final String apiKey="818ef47d-1951-491d-9e1f-42c92afb5c09";
@@ -80,15 +72,15 @@ public class Utility {
         // return the string
         return output.toString();
     }
-    public static final ArrayList<Story> extractJsonNews(String inputString) {
+    public static final ArrayList<Story> extractJsonNews(String inputString,String urlString,int currentPage,int numberOfPagesToFetch) {
         // extract Json data into a List of Objects.
         ArrayList<Story> storiesList=new ArrayList<>();
-
+        int availablePages=0;
         try {
-            JSONObject root=new JSONObject(inputString);
+            JSONObject root = new JSONObject(inputString);
+            availablePages = root.getJSONObject("response").getInt("pages");
             JSONArray results=root.getJSONObject("response").getJSONArray("results");
             for(int i=0;i<results.length();i++) {
-                Log.e(Utility.errorTag,"i="+i);
                 JSONObject storyJSONObject=results.getJSONObject(i);
                 Story newStory=new Story();
                 newStory.setId(storyJSONObject.getString("id"));
@@ -97,11 +89,17 @@ public class Utility {
                 newStory.setTitle(storyJSONObject.getString("webTitle"));
                 newStory.setDate(extractJSONDate(storyJSONObject.getString("webPublicationDate")));
                 storiesList.add(newStory);
-
             }
         } catch ( JSONException e) {
             Log.e(errorTag,e.getMessage());
         }
+        if(numberOfPagesToFetch>1 && currentPage<availablePages) {
+            // modifica si url-ul nu uita
+            Log.e(errorTag,"currentPage="+currentPage+" pagesToFetch="+numberOfPagesToFetch);
+            urlString=urlString.replaceAll("&page="+currentPage+"$","&page="+(currentPage+1));
+            storiesList.addAll(Utility.getStoriesList(urlString,currentPage+1,numberOfPagesToFetch-1));
+        }
+        Log.e(Utility.errorTag,urlString);
         return storiesList;
     }
     public static URL createUrl(String urlString) {
@@ -129,10 +127,10 @@ public class Utility {
             return formattedDate.format(input);
     }
 
-    public static ArrayList<Story> getStoriesList(String urlString, int numberOfPagesFetched){
+    public static ArrayList<Story> getStoriesList(String urlString,int currentPage, int numberOfPagesToFetch){
         String fromHttpResult=Utility.fetchStringFromHttp(urlString);
         //Log.e(Utility.errorTag,fromHttpResult);
-        ArrayList<Story> storiesList=Utility.extractJsonNews(fromHttpResult);
+        ArrayList<Story> storiesList=Utility.extractJsonNews(fromHttpResult, urlString,currentPage, numberOfPagesToFetch);
         return storiesList;
     }
 

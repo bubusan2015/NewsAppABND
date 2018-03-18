@@ -68,11 +68,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         storyArrayAdapter.clear();
         if (stories != null)
             storyArrayAdapter.addAll(stories);
-        try {
-            Thread.sleep(3500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         loadingListProgressBar.setVisibility(View.GONE);
     }
 
@@ -82,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
     
     public String getLink () {
-        Log.e(Utility.errorTag,"https://content.guardianapis.com/search?q=android&from-date=2016-01-01"+"&api-key="+Utility.apiKey);
-        return "https://content.guardianapis.com/search?q=android&from-date=2016-01-01"+"&api-key="+Utility.apiKey;
+        Log.e(Utility.errorTag,"https://content.guardianapis.com/search?q=android&from-date=2016-01-01"+"&api-key="+Utility.apiKey+"&page=1");
+        return "https://content.guardianapis.com/search?q=android&from-date=2016-01-01"+"&api-key="+Utility.apiKey+"&page=1";
     }
 }

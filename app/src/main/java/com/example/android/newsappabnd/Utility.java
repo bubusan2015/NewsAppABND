@@ -24,6 +24,7 @@ import java.util.Locale;
 public class Utility {
     public static final String errorTag = "newsAppErr";
     public static final String apiKey = "818ef47d-1951-491d-9e1f-42c92afb5c09";
+    public static final int taskLoaderId = 0;
 
     public static String fetchStringFromHttp(String urlString) {
         String resultString = "";
@@ -31,7 +32,6 @@ public class Utility {
         if (url == null) {
             return "";
         }
-        // open the connection and get the inputStream
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
 
@@ -52,7 +52,7 @@ public class Utility {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
-        // read the string from inputStream
+
         if (inputStream == null)
             return resultString;
         StringBuilder output = new StringBuilder();
@@ -70,12 +70,10 @@ public class Utility {
             return resultString;
         }
 
-        // return the string
         return output.toString();
     }
 
     public static ArrayList<Story> extractJsonNews(String inputString, String urlString, int currentPage, int numberOfPagesToFetch) {
-        // extract Json data into a List of Objects.
         ArrayList<Story> storiesList = new ArrayList<>();
         int availablePages = 0;
         try {
@@ -90,17 +88,21 @@ public class Utility {
                 newStory.setWebUrl(storyJSONObject.getString("webUrl"));
                 newStory.setTitle(storyJSONObject.getString("webTitle"));
                 newStory.setDate(extractJSONDate(storyJSONObject.getString("webPublicationDate")));
+                StringBuilder authorNameBuild = new StringBuilder();
+                JSONArray contributorsJSONArray = storyJSONObject.getJSONArray("tags");
+                for (int j = 0; j < contributorsJSONArray.length(); j++) {
+                    authorNameBuild.append(contributorsJSONArray.getJSONObject(j).getString("webTitle") + ", ");
+                }
+                newStory.setAuthor(authorNameBuild.toString().replaceAll(",\\s$", ""));
                 storiesList.add(newStory);
             }
         } catch (JSONException e) {
             Log.e(errorTag, e.getMessage());
         }
         if (numberOfPagesToFetch > 1 && currentPage < availablePages) {
-            //Log.e(errorTag, "currentPage=" + currentPage + " pagesToFetch=" + numberOfPagesToFetch);
             urlString = urlString.replaceAll("&page=" + currentPage + "$", "&page=" + (currentPage + 1));
             storiesList.addAll(Utility.getStoriesList(urlString, currentPage + 1, numberOfPagesToFetch - 1));
         }
-        //Log.e(Utility.errorTag, urlString);
         return storiesList;
     }
 
@@ -126,13 +128,12 @@ public class Utility {
     }
 
     public static String getFormatedDate(Date input) {
-        SimpleDateFormat formattedDate = new SimpleDateFormat("yyyy/MM/dd",Locale.US);
+        SimpleDateFormat formattedDate = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
         return formattedDate.format(input);
     }
 
     public static ArrayList<Story> getStoriesList(String urlString, int currentPage, int numberOfPagesToFetch) {
         String fromHttpResult = Utility.fetchStringFromHttp(urlString);
-        //Log.e(Utility.errorTag,fromHttpResult);
         return Utility.extractJsonNews(fromHttpResult, urlString, currentPage, numberOfPagesToFetch);
     }
 }

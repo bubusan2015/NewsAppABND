@@ -2,19 +2,15 @@ package com.example.android.newsappabnd;
 
 import java.util.Date;
 
-/**
- * Created by nibos on 3/16/2018.
- */
-
 public class Story {
     private String id;
     private String sectionName;
     private Date date;
     private String webUrl;
     private String title;
+    private String author;
 
-    public Story() {
-    } // empty constructor
+    public Story() { }
 
     public String getId() {
         return id;
@@ -55,4 +51,13 @@ public class Story {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
 }

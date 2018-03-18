@@ -26,10 +26,12 @@ public class StoryArrayAdapter extends ArrayAdapter<Story> {
         }
         Story currentStory = getItem(position);
         TextView storyTitleTextView = convertView.findViewById(R.id.tv_story_title_listview_item);
+        TextView storyAuthorTextView = convertView.findViewById(R.id.tv_story_author_listview_item);
         TextView storySectionTextView = convertView.findViewById(R.id.tv_story_section_listview_item);
         TextView storyDateTextView = convertView.findViewById(R.id.tv_story_date_listview_item);
         storyTitleTextView.setText(currentStory.getTitle());
         storySectionTextView.setText(currentStory.getSectionName());
+        storyAuthorTextView.setText(currentStory.getAuthor());
         storyDateTextView.setText(Utility.getFormatedDate(currentStory.getDate()));
         return convertView;
     }

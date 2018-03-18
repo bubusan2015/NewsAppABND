@@ -1,8 +1,8 @@
 package com.example.android.newsappabnd;
 
-
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -17,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 
         if(activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
-            getSupportLoaderManager().initLoader(0,null,this);
+            getSupportLoaderManager().initLoader(Utility.taskLoaderId,null,this);
         } else {
             loadingListProgressBar.setVisibility(View.GONE);
             emptyView.setText(getString(R.string.no_internet_connection));
@@ -56,7 +55,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 String webPage = storyArrayAdapter.getItem(position).getWebUrl();
                 Intent launchInBrowser = new Intent(Intent.ACTION_VIEW);
                 launchInBrowser.setData(Uri.parse(webPage));
-                startActivity(launchInBrowser);
+
+                PackageManager packageManager = getPackageManager();
+                if (launchInBrowser.resolveActivity(packageManager) != null) {
+                    startActivity(launchInBrowser);
+                } else {
+                    Log.d(Utility.errorTag, "No Intent available to handle action");
+                }
             }
         });
     }
@@ -82,12 +87,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
     
     public String getLink () {
-        //Log.e(Utility.errorTag,"https://content.guardianapis.com/search?q=android&from-date=2016-01-01"+"&api-key="+Utility.apiKey+"&page=1");
-        return "https://content.guardianapis.com/search?q=android&from-date=2016-01-01"+"&api-key="+Utility.apiKey+"&page=1";
+        return "https://content.guardianapis.com/search?q=android&from-date=2016-01-01&show-tags=contributor"+"&api-key="+Utility.apiKey+"&page=1";
     }
 
     @Override
     public void onRefresh() {
-        getSupportLoaderManager().restartLoader(0,null,this);
+        getSupportLoaderManager().restartLoader(Utility.taskLoaderId,null,this);
     }
 }

@@ -14,6 +14,16 @@
         android:textSize="@dimen/details_font_size_1"
         tools:text="this is a the title of my news" />
 
+    <TextView
+        android:id="@+id/tv_story_author_listview_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:textColor="@color/text_color_1"
+        android:textSize="@dimen/details_font_size_2"
+        android:textStyle="italic"
+        tools:text="Author Name" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,6 +39,7 @@
             android:textAllCaps="true"
             android:textColor="@color/text_color_2"
             android:textSize="@dimen/details_font_size_2"
+            android:textStyle="bold"
             tools:text="TECHNOLOGY" />
 
         <TextView

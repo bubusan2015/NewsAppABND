@@ -12,7 +12,9 @@ public class Story {
     private Date date;
     private String webUrl;
     private String title;
-    public Story() {} // empty constructor
+
+    public Story() {
+    } // empty constructor
 
     public String getId() {
         return id;

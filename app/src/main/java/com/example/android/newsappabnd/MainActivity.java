@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,11 +21,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Story>> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Story>>,SwipeRefreshLayout.OnRefreshListener {
     private ListView storiesListView;
     private  StoryArrayAdapter storyArrayAdapter;
     private TextView emptyView;
     private ProgressBar loadingListProgressBar;
+    private SwipeRefreshLayout swipeRefresh;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         storiesListView=findViewById(R.id.listview_stories);
         loadingListProgressBar=findViewById(R.id.progress_bar_main_activity);
         emptyView=(TextView) findViewById(R.id.empty_element);
+        swipeRefresh=(SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        swipeRefresh.setOnRefreshListener(this);
         storyArrayAdapter=new StoryArrayAdapter(this,0,new ArrayList<Story>());
         storiesListView.setAdapter(storyArrayAdapter);
         storiesListView.setEmptyView(emptyView);
@@ -69,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (stories != null)
             storyArrayAdapter.addAll(stories);
         loadingListProgressBar.setVisibility(View.GONE);
+        swipeRefresh.setRefreshing(false);
     }
 
     @Override
@@ -77,7 +82,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
     
     public String getLink () {
-        Log.e(Utility.errorTag,"https://content.guardianapis.com/search?q=android&from-date=2016-01-01"+"&api-key="+Utility.apiKey+"&page=1");
+        //Log.e(Utility.errorTag,"https://content.guardianapis.com/search?q=android&from-date=2016-01-01"+"&api-key="+Utility.apiKey+"&page=1");
         return "https://content.guardianapis.com/search?q=android&from-date=2016-01-01"+"&api-key="+Utility.apiKey+"&page=1";
+    }
+
+    @Override
+    public void onRefresh() {
+        getSupportLoaderManager().restartLoader(0,null,this);
     }
 }

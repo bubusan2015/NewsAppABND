@@ -19,20 +19,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Utility {
-    public static final String errorTag="newsAppErr";
-    public static final String apiKey="818ef47d-1951-491d-9e1f-42c92afb5c09";
+    public static final String errorTag = "newsAppErr";
+    public static final String apiKey = "818ef47d-1951-491d-9e1f-42c92afb5c09";
 
     public static String fetchStringFromHttp(String urlString) {
-        String resultString="";
+        String resultString = "";
         URL url = createUrl(urlString);
         if (url == null) {
             return "";
         }
         // open the connection and get the inputStream
-        HttpURLConnection urlConnection =null;
-        InputStream inputStream=null;
+        HttpURLConnection urlConnection = null;
+        InputStream inputStream = null;
 
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -42,7 +43,7 @@ public class Utility {
             if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
             } else {
-                Log.e(errorTag, "Error response code: "+urlConnection.getResponseCode());
+                Log.e(errorTag, "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException exception) {
             Log.e(Utility.errorTag, exception.getMessage());
@@ -62,27 +63,28 @@ public class Utility {
             String line = reader.readLine();
             while (line != null) {
                 output.append(line);
-                line=reader.readLine();
+                line = reader.readLine();
             }
         } catch (IOException e) {
-            Log.e(errorTag,e.getMessage());
+            Log.e(errorTag, e.getMessage());
             return resultString;
         }
 
         // return the string
         return output.toString();
     }
-    public static final ArrayList<Story> extractJsonNews(String inputString,String urlString,int currentPage,int numberOfPagesToFetch) {
+
+    public static ArrayList<Story> extractJsonNews(String inputString, String urlString, int currentPage, int numberOfPagesToFetch) {
         // extract Json data into a List of Objects.
-        ArrayList<Story> storiesList=new ArrayList<>();
-        int availablePages=0;
+        ArrayList<Story> storiesList = new ArrayList<>();
+        int availablePages = 0;
         try {
             JSONObject root = new JSONObject(inputString);
             availablePages = root.getJSONObject("response").getInt("pages");
-            JSONArray results=root.getJSONObject("response").getJSONArray("results");
-            for(int i=0;i<results.length();i++) {
-                JSONObject storyJSONObject=results.getJSONObject(i);
-                Story newStory=new Story();
+            JSONArray results = root.getJSONObject("response").getJSONArray("results");
+            for (int i = 0; i < results.length(); i++) {
+                JSONObject storyJSONObject = results.getJSONObject(i);
+                Story newStory = new Story();
                 newStory.setId(storyJSONObject.getString("id"));
                 newStory.setSectionName(storyJSONObject.getString("sectionName"));
                 newStory.setWebUrl(storyJSONObject.getString("webUrl"));
@@ -90,48 +92,47 @@ public class Utility {
                 newStory.setDate(extractJSONDate(storyJSONObject.getString("webPublicationDate")));
                 storiesList.add(newStory);
             }
-        } catch ( JSONException e) {
-            Log.e(errorTag,e.getMessage());
+        } catch (JSONException e) {
+            Log.e(errorTag, e.getMessage());
         }
-        if(numberOfPagesToFetch>1 && currentPage<availablePages) {
-            // modifica si url-ul nu uita
-            Log.e(errorTag,"currentPage="+currentPage+" pagesToFetch="+numberOfPagesToFetch);
-            urlString=urlString.replaceAll("&page="+currentPage+"$","&page="+(currentPage+1));
-            storiesList.addAll(Utility.getStoriesList(urlString,currentPage+1,numberOfPagesToFetch-1));
+        if (numberOfPagesToFetch > 1 && currentPage < availablePages) {
+            //Log.e(errorTag, "currentPage=" + currentPage + " pagesToFetch=" + numberOfPagesToFetch);
+            urlString = urlString.replaceAll("&page=" + currentPage + "$", "&page=" + (currentPage + 1));
+            storiesList.addAll(Utility.getStoriesList(urlString, currentPage + 1, numberOfPagesToFetch - 1));
         }
-        Log.e(Utility.errorTag,urlString);
+        //Log.e(Utility.errorTag, urlString);
         return storiesList;
     }
+
     public static URL createUrl(String urlString) {
-        URL url = null;
+        URL url;
         try {
             url = new URL(urlString);
         } catch (MalformedURLException exception) {
-            Log.e(Utility.errorTag,"malformed url "+exception.getMessage());
+            Log.e(Utility.errorTag, "malformed url " + exception.getMessage());
             return null;
         }
         return url;
     }
+
     public static Date extractJSONDate(String date) {
-        SimpleDateFormat jSONGuardianFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        SimpleDateFormat jSONGuardianFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
         try {
-            Date parsedDate = jSONGuardianFormat.parse(date);
-            return parsedDate;
+            return jSONGuardianFormat.parse(date);
         } catch (ParseException e) {
             Log.e(errorTag, "Error parsing json date:" + e.getMessage());
             return null;
         }
     }
+
     public static String getFormatedDate(Date input) {
-            SimpleDateFormat formattedDate=new SimpleDateFormat("yyyy/MM/dd");
-            return formattedDate.format(input);
+        SimpleDateFormat formattedDate = new SimpleDateFormat("yyyy/MM/dd",Locale.US);
+        return formattedDate.format(input);
     }
 
-    public static ArrayList<Story> getStoriesList(String urlString,int currentPage, int numberOfPagesToFetch){
-        String fromHttpResult=Utility.fetchStringFromHttp(urlString);
+    public static ArrayList<Story> getStoriesList(String urlString, int currentPage, int numberOfPagesToFetch) {
+        String fromHttpResult = Utility.fetchStringFromHttp(urlString);
         //Log.e(Utility.errorTag,fromHttpResult);
-        ArrayList<Story> storiesList=Utility.extractJsonNews(fromHttpResult, urlString,currentPage, numberOfPagesToFetch);
-        return storiesList;
+        return Utility.extractJsonNews(fromHttpResult, urlString, currentPage, numberOfPagesToFetch);
     }
-
 }

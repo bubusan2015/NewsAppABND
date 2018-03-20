@@ -2,4 +2,34 @@
     <string name="app_name">NewsAppABND</string>
     <string name="empty_list_text">Currently there are no stories for you. You can swipe down to refresh your news list or always come later and check for all new stories.</string>
     <string name="no_internet_connection">"There is no internet connection. Please connect and try again."</string>
+    <string name="settings_menu_item">Settings</string>
+    <string name="settings_title">News Settings</string>
+
+    <string name="settings_sections_title">Sections</string>
+    <string name="settings_section_key" translatable="false">section</string>
+    <string name="settings_order_by_title">Order By</string>
+    <string name="settings_order_by_key" translatable="false">orderby</string>
+
+    <string name="settings_order_by_relevance_label">Relevance</string>
+    <string name="settings_order_by_newest_label">Newest First</string>
+
+    <string name="settings_order_by_relevance_value" translatable="false">relevance</string>
+    <string name="settings_order_by_newest_value" translatable="false">newest</string>
+
+    <string name="settings_section_all_label">All</string>
+    <string name="settings_section_help_label">Help</string>
+    <string name="settings_section_games_label">Games</string>
+    <string name="settings_section_technology_label">Technology</string>
+    <string name="settings_section_news_label">News</string>
+    <string name="settings_section_education_label">Education</string>
+    <string name="settings_section_culture_label">Culture</string>
+
+    <string name="settings_section_all_value" translatable="false">all</string>
+    <string name="settings_section_help_value" translatable="false">help</string>
+    <string name="settings_section_games_value" translatable="false">games</string>
+    <string name="settings_section_technology_value" translatable="false">technology</string>
+    <string name="settings_section_news_value" translatable="false">news</string>
+    <string name="settings_section_education_value" translatable="false">education</string>
+    <string name="settings_section_culture_value" translatable="false">culture</string>
+
 </resources>

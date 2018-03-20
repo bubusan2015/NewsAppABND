@@ -24,6 +24,8 @@ import java.util.Locale;
 public class Utility {
     public static final String errorTag = "newsAppErr";
     public static final String apiKey = "818ef47d-1951-491d-9e1f-42c92afb5c09";
+    public static final String sectionTag="section";
+    public static final String orderTag="orderby";
     public static final int taskLoaderId = 0;
 
     public static String fetchStringFromHttp(String urlString) {

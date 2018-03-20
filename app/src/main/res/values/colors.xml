@@ -3,14 +3,6 @@
     <color name="colorPrimary">#5C6BC0</color>
     <color name="colorPrimaryDark">#3F51B5</color>
     <color name="colorAccent">#303F9F</color>
-
     <color name="text_color_1">#1a213b</color>
     <color name="text_color_2">#595959</color>
-    <color name="white">#ffffff</color>
-
-    <color name="foreground_darker">#c1c1c1</color>
-
-    <color name="tabBackground">#282828</color>
-
-    <color name="darkBackground">#181818</color>
 </resources>
